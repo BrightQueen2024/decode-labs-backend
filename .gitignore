@@ -1,0 +1,11 @@
+# 📦 Dependency directories
+node_modules/
+
+# 🗄️ Local Database Storage
+portfolio.db
+portfolio.db-journal
+
+# 🛑 System Configs
+.env
+.DS_Store
+Thumbs.db

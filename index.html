@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decode Labs - Portal</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121214; color: #fff; max-width: 600px; margin: 40px auto; padding: 20px; }
+        h1, h2 { color: #9966ff; }
+        form { background: #1a1a1e; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #29292e; }
+        input { width: 93%; padding: 10px; margin-bottom: 15px; border-radius: 6px; border: 1px solid #29292e; background: #0c0c0d; color: #fff; }
+        button { width: 100%; padding: 12px; background: #9966ff; border: none; color: #fff; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #8247ff; }
+        ul { list-style: none; padding: 0; }
+        li { background: #1a1a1e; padding: 15px; margin-bottom: 10px; border-radius: 6px; border-left: 4px solid #9966ff; display: flex; justify-content: space-between; }
+        .role { color: #a1a1aa; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <h1>🚀 Decode Labs Intern Portal</h1>
+    
+    <form id="internForm">
+        <h3>Register New Intern</h3>
+        <input type="text" id="internName" placeholder="Enter Full Name" required>
+        <input type="text" id="internRole" placeholder="Enter Internship Role (e.g. Full Stack Intern)" required>
+        <button type="submit">Add Intern to Server</button>
+    </form>
+
+    <h2>📋 Active Records</h2>
+    <ul id="internList"></ul>
+
+    <script src="script.js"></script>
+</body>
+</html>
