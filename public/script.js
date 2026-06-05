@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const internForm = document.getElementById('internForm');
     const internList = document.getElementById('internList');
 
-    // 📥 1. Fetch and render data records directly from the SQLite database
+    // 📥 1. Fetch and render data records
     async function fetchDatabaseRecords() {
         try {
             const response = await fetch('/api/messages');
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 li.innerHTML = `
                     <div class="record-details">
                         <span class="record-name">👤 ${record.name || 'Anonymous User'}</span>
-                        <span class="role">💬 ${record.role || 'No message provided.'}</span>
+                        <span class="role">💬 ${record.role || record.message || 'No message provided.'}</span>
                     </div>
                 `;
                 internList.appendChild(li);
@@ -29,17 +29,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 📤 2. Form Submission Handler to securely send payloads to the backend API
+    // 📤 2. Form Submission Handler
     if (internForm) {
         internForm.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Halt standard hardware webpage refresh
+            event.preventDefault(); // Halt standard webpage refresh
 
-            const nameInput = document.getElementById('internName');
-            const roleInput = document.getElementById('internRole');
+            // ⚠️ If your HTML IDs are actually 'name' and 'message', update these strings here:
+            const nameInput = document.getElementById('internName') || document.getElementById('name');
+            const roleInput = document.getElementById('internRole') || document.getElementById('message');
+
+            if (!nameInput || !roleInput) {
+                console.error("❌ Form input elements could not be found in the HTML DOM.");
+                return;
+            }
 
             const formData = {
                 name: nameInput.value.trim(),
-                role: roleInput.value.trim()
+                role: roleInput.value.trim() 
             };
 
             try {
@@ -52,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (response.ok) {
-                    console.log('🚀 Transmission successful! Saved securely to portfolio.db.');
+                    console.log('🚀 Transmission successful! Saved securely.');
                     
                     // Reset inputs safely
                     nameInput.value = '';
