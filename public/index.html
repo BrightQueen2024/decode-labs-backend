@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayuba Garba | Full Stack Developer Portfolio</title>
+    <link rel="icon" type="image/jpeg" href="favicon.png.ico">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="#about" class="avatar-link">
+                <img src="profile.jpg.jpeg" alt="Ayuba Garba" class="logo-img">
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#certificates">Certificates</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <section id="hero" class="hero-section">
+        <div class="hero-content">
+            <h1>Hi, I'm <span class="text-glow">Ayuba Garba</span></h1>
+            <h2>Full Stack Developer Intern</h2>
+            <p>Building high-performance web applications and mastering full-stack system architectures.</p>
+            <a href="#projects" class="cta-btn">View My Work</a>
+        </div>
+    </section>
+
+    <section id="about" class="about-section">
+        <h2>About Me</h2>
+        <div class="about-content">
+            <p>I am a dedicated Computer Science student with a deep passion for full-stack software development, systems architecture, and technical evaluation.</p>
+            <p>My goal during this internship at Decode Labs is to build highly responsive interfaces while mastering secure, scalable backend integrations.</p>
+        </div>
+    </section>
+
+    <section id="skills" class="skills-section">
+        <h2>Technical Skills</h2>
+        <div class="skills-grid">
+            <div class="skill-card">Frontend (HTML, CSS, JavaScript)</div>
+            <div class="skill-card">Backend (Node.js, Express)</div>
+            <div class="skill-card">Databases (MongoDB, SQLite)</div>
+            <div class="skill-card">Tools (Git, VS Code)</div>
+        </div>
+    </section>
+
+    <section id="certificates" class="certificates-section">
+        <h2>Licenses & Certifications</h2>
+        <div class="certificates-grid">
+            
+            <div class="cert-card">
+                <div class="cert-badge">☁️</div>
+                <h3>AWS Certified AI Practitioner</h3>
+                <p>Amazon Web Services (AWS)</p>
+                <span class="cert-date">Specialized Track — 2026</span>
+            </div>
+
+            <div class="cert-card">
+                <div class="cert-badge">📜</div>
+                <h3>Advanced JavaScript Vetting</h3>
+                <p>Professional Developer Evaluation Platform</p>
+                <span class="cert-date">Passed with 80% Core Score</span>
+            </div>
+
+            <div class="cert-card">
+                <div class="cert-badge">🖥️</div>
+                <h3>Full Stack Software Engineering Track</h3>
+                <p>Decode Labs Industrial Training</p>
+                <span class="cert-date">In Progress — 2026</span>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="projects" class="projects-section">
+        <h2>Featured Projects</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <h3>NexaVerse Super-App</h3>
+                <p>A comprehensive digital ecosystem and multi-functional application interface designed for unified user workflows.</p>
+                <span class="tech-tag">HTML5</span> <span class="tech-tag">CSS3</span>
+            </div>
+            <div class="project-card">
+                <h3>Awsoli Web Hub</h3>
+                <p>Engineered a streamlined web presence and digital identity management architecture for organizational scale.</p>
+                <span class="tech-tag">JavaScript</span> <span class="tech-tag">Flexbox</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <h2>Get In Touch</h2>
+        <p class="contact-subtitle">Have a question or want to work together? Drop a message below!</p>
+        
+        <form id="internForm" class="contact-form">
+            <div class="form-group">
+                <input type="text" id="internName" placeholder="Your Name" required>
+            </div>
+            <div class="form-group">
+                <input type="email" id="email" placeholder="Your Email (Optional)">
+            </div>
+            <div class="form-group">
+                <textarea id="internRole" rows="6" placeholder="Your Message or Project Details" required></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+
+        <div class="records-container" style="margin-top: 40px;">
+            <h3>📋 System Audit Log (Live Database Feed)</h3>
+            <ul id="internList"></ul>
+        </div>
+    </section>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
