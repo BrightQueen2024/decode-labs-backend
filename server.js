@@ -9,15 +9,16 @@ const PORT = process.env.PORT || 3000;
 // 🔌 Clean Environment Variable Link
 const MONGO_URI = process.env.MONGO_URI;
 
-// Connect to Database with a smart fallback mechanism
+// 🛡️ Robust Production Database Connection Pipeline
+if (!MONGO_URI) {
+    console.error('❌ CRITICAL ERROR: MONGO_URI is missing from your environment configurations!');
+    process.exit(1);
+}
+
 mongoose.connect(MONGO_URI)
     .then(() => console.log('🚀 Successfully connected to MongoDB Atlas Cloud Database!'))
     .catch(err => {
-        console.log('⚠️ Local Network DNS blocked the Cloud. Switching to safe local memory driver fallback...');
-        // Fallback to a localized state so your development environment stays awake smoothly
-        mongoose.connect('mongodb://127.0.0.1:27017/portfolio_dev')
-            .then(() => console.log('💻 Connected to Local Development Data Layer successfully.'))
-            .catch(localErr => console.error('❌ Data Layer Offline:', localErr));
+        console.error('❌ Database Connection Failure:', err.message);
     });
 
 // 📝 Define data schema rules for portfolio messages
@@ -56,6 +57,7 @@ app.post('/api/messages', async (req, res) => {
         await newMessage.save();
         res.status(201).json(newMessage);
     } catch (error) {
+        console.error('❌ Failed to write message record to MongoDB:', error);
         res.status(500).json({ error: 'Failed to write message record.' });
     }
 });
@@ -66,5 +68,5 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`🌐 Full-Stack Server running live at http://localhost:${PORT}`);
+    console.log(`🌐 Full-Stack Server running live on port ${PORT}`);
 });
