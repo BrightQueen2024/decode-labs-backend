@@ -107,18 +107,14 @@
                 <input type="text" id="internName" placeholder="Your Name" required>
             </div>
             <div class="form-group">
-                <input type="email" id="email" placeholder="Your Email (Optional)">
+                <!-- ✉️ FIXED: Added required parameter and changed ID to internEmail to sync with script -->
+                <input type="email" id="internEmail" placeholder="Your Email Address" required>
             </div>
             <div class="form-group">
                 <textarea id="internRole" rows="6" placeholder="Your Message or Project Details" required></textarea>
             </div>
             <button type="submit" class="submit-btn">Send Message</button>
         </form>
-
-        <div class="records-container" style="margin-top: 40px;">
-            <h3>📋 System Audit Log (Live Database Feed)</h3>
-            <ul id="internList"></ul>
-        </div>
     </section>
 </main>
 

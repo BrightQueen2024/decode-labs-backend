@@ -6,10 +6,8 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// 🔌 Clean Environment Variable Link
 const MONGO_URI = process.env.MONGO_URI;
 
-// 🛡️ Robust Production Database Connection Pipeline
 if (!MONGO_URI) {
     console.error('❌ CRITICAL ERROR: MONGO_URI is missing from your environment configurations!');
     process.exit(1);
@@ -17,43 +15,32 @@ if (!MONGO_URI) {
 
 mongoose.connect(MONGO_URI)
     .then(() => console.log('🚀 Successfully connected to MongoDB Atlas Cloud Database!'))
-    .catch(err => {
-        console.error('❌ Database Connection Failure:', err.message);
-    });
+    .catch(err => console.error('❌ Database Connection Failure:', err.message));
 
-// 📝 Define data schema rules for portfolio messages
+// 📝 Updated Schema Rule: Added 'email' as a strictly required string
 const messageSchema = new mongoose.Schema({
     name: { type: String, required: true },
+    email: { type: String, required: true }, // 👈 Enforces email capture
     role: { type: String, required: true },
     createdAt: { type: Date, default: Date.now }
 });
 
 const Message = mongoose.model('Message', messageSchema);
 
-// Middleware hooks configuration
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 📥 API Route: Fetch all message rows
-app.get('/api/messages', async (req, res) => {
-    try {
-        const records = await Message.find().sort({ createdAt: -1 });
-        res.json(records);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch messages.' });
-    }
-});
-
 // 📤 API Route: Push a new message payload
 app.post('/api/messages', async (req, res) => {
-    const { name, role } = req.body;
+    const { name, email, role } = req.body; // 👈 Destructure email
     
-    if (!name || !role) {
-        return res.status(400).json({ error: 'Name and message details are required.' });
+    // Validate that all fields exist before touching the database
+    if (!name || !email || !role) {
+        return res.status(400).json({ error: 'Name, email, and message details are required.' });
     }
 
     try {
-        const newMessage = new Message({ name, role });
+        const newMessage = new Message({ name, email, role });
         await newMessage.save();
         res.status(201).json(newMessage);
     } catch (error) {
@@ -62,7 +49,6 @@ app.post('/api/messages', async (req, res) => {
     }
 });
 
-// 🎯 EXPRESS 5 IMMUNE FALLBACK: Handles single-page app routing using a custom middleware function
 app.use((req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });

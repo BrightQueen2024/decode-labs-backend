@@ -1,51 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
     const internForm = document.getElementById('internForm');
-    const internList = document.getElementById('internList');
 
-    // 📥 1. Fetch and render data records
-    async function fetchDatabaseRecords() {
-        try {
-            const response = await fetch('/api/messages');
-            if (!response.ok) throw new Error('Network response was not stable.');
-            
-            const records = await response.json();
-            
-            // Clear the list to prepare for fresh data rows
-            internList.innerHTML = '';
-            
-            // Generate visual list elements for each database entry
-            records.forEach(record => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <div class="record-details">
-                        <span class="record-name">👤 ${record.name || 'Anonymous User'}</span>
-                        <span class="role">💬 ${record.role || record.message || 'No message provided.'}</span>
-                    </div>
-                `;
-                internList.appendChild(li);
-            });
-        } catch (error) {
-            console.error('❌ Error rendering live system records:', error);
-        }
-    }
-
-    // 📤 2. Form Submission Handler
+    // 📤 Form Submission Handler (Securely sends payloads to the backend)
     if (internForm) {
         internForm.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Halt standard webpage refresh
+            event.preventDefault(); 
 
-            // ⚠️ If your HTML IDs are actually 'name' and 'message', update these strings here:
             const nameInput = document.getElementById('internName') || document.getElementById('name');
-            const roleInput = document.getElementById('internRole') || document.getElementById('message');
-
-            if (!nameInput || !roleInput) {
-                console.error("❌ Form input elements could not be found in the HTML DOM.");
-                return;
-            }
+            const emailInput = document.getElementById('internEmail') || document.getElementById('email');
+            const messageInput = document.getElementById('internRole') || document.getElementById('message');
 
             const formData = {
                 name: nameInput.value.trim(),
-                role: roleInput.value.trim() 
+                email: emailInput.value.trim(), // ✉️ Added email field
+                role: messageInput.value.trim() 
             };
 
             try {
@@ -58,14 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (response.ok) {
-                    console.log('🚀 Transmission successful! Saved securely.');
+                    alert('🚀 Message sent successfully! I will get back to you soon.');
                     
                     // Reset inputs safely
                     nameInput.value = '';
-                    roleInput.value = '';
-                    
-                    // Asynchronously update the UI feed stream automatically
-                    await fetchDatabaseRecords();
+                    if(emailInput) emailInput.value = '';
+                    messageInput.value = '';
                 } else {
                     console.error('❌ Server rejected the data packet transaction.');
                 }
@@ -74,7 +40,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    // Initialize the live dashboard feed instantly on execution loop
-    fetchDatabaseRecords();
 });
