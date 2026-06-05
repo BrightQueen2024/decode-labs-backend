@@ -1,54 +1,61 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const internForm = document.getElementById('internForm');
-    const modal = document.getElementById('customAlertModal');
-    const closeModalBtn = document.getElementById('closeModalBtn');
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+const path = require('path');
 
-    if (internForm) {
-        internForm.addEventListener('submit', async (event) => {
-            event.preventDefault(); 
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-            const nameInput = document.getElementById('internName');
-            const emailInput = document.getElementById('internEmail');
-            const messageInput = document.getElementById('internRole');
+const MONGO_URI = process.env.MONGO_URI;
 
-            const formData = {
-                name: nameInput.value.trim(),
-                email: emailInput.value.trim(),
-                role: messageInput.value.trim() 
-            };
+if (!MONGO_URI) {
+    console.error('❌ CRITICAL ERROR: MONGO_URI is missing from your environment configurations!');
+    process.exit(1);
+}
 
-            try {
-                const response = await fetch('/api/messages', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
+mongoose.connect(MONGO_URI)
+    .then(() => console.log('🚀 Successfully connected to MongoDB Atlas Cloud Database!'))
+    .catch(err => console.error('❌ Database Connection Failure:', err.message));
 
-                if (response.ok) {
-                    // 🎉 Trigger the branded modal instead of a boring browser popup
-                    if (modal) {
-                        modal.style.display = 'flex';
-                    }
-                    
-                    // Safely clear out the inputs for the next entry
-                    nameInput.value = '';
-                    if (emailInput) emailInput.value = '';
-                    messageInput.value = '';
-                } else {
-                    console.error('❌ Server rejected the data packet transaction.');
-                }
-            } catch (error) {
-                console.error('❌ Network link failure during form transmission:', error);
-            }
-        });
+// 📝 Schema Configuration Rule
+const messageSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true }, 
+    role: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now }
+});
+
+const Message = mongoose.model('Message', messageSchema);
+
+// 🌐 Parse JSON Payloads
+app.use(express.json());
+
+// 📁 CORRECT PATHING: Serves all static files out of your /public directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// 📤 API Route: Push form records
+app.post('/api/messages', async (req, res) => {
+    const { name, email, role } = req.body;
+    
+    if (!name || !email || !role) {
+        return res.status(400).json({ error: 'Name, email, and message details are required.' });
     }
 
-    // 🔒 Close Modal Window Event
-    if (closeModalBtn && modal) {
-        closeModalBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
+    try {
+        const newMessage = new Message({ name, email, role });
+        await newMessage.save();
+        res.status(201).json(newMessage);
+    } catch (error) {
+        console.error('❌ Failed to write message record to MongoDB:', error);
+        res.status(500).json({ error: 'Failed to write message record.' });
     }
+});
+
+// 🏠 FALLBACK ROUTE: Delivers index.html for any root or unhandled pathing requests
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.listen(PORT, () => {
+    console.log(`🌐 Full-Stack Server running live on port ${PORT}`);
 });
