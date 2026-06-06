@@ -51,8 +51,9 @@ app.post('/api/messages', async (req, res) => {
     }
 });
 
-// 🏠 FALLBACK ROUTE: Upgraded syntax to string regex match for Express v5 compatibility
-app.get('/:splat(.*)', (req, res) => {
+// 🏠 BULLETPROOF FALLBACK ROUTE: Express v5 compatible middleware
+// This naturally catches any unhandled paths and serves index.html safely
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
