@@ -10,10 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const emailInput = document.getElementById('internEmail') || document.getElementById('email');
             const messageInput = document.getElementById('internRole') || document.getElementById('message');
 
+            // 🌟 FIXED: Changed the property key from 'role' to 'message' to match database expectations
             const formData = {
                 name: nameInput.value.trim(),
-                email: emailInput.value.trim(), // ✉️ Added email field
-                role: messageInput.value.trim() 
+                email: emailInput.value.trim(),
+                message: messageInput.value.trim() 
             };
 
             try {
@@ -29,9 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('🚀 Message sent successfully! I will get back to you soon.');
                     
                     // Reset inputs safely
-                    nameInput.value = '';
-                    if(emailInput) emailInput.value = '';
-                    messageInput.value = '';
+                    if (nameInput) nameInput.value = '';
+                    if (emailInput) emailInput.value = '';
+                    if (messageInput) messageInput.value = '';
                 } else {
                     console.error('❌ Server rejected the data packet transaction.');
                 }
