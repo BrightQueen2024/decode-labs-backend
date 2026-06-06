@@ -35,7 +35,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // 📤 API Route: Push form records
 app.post('/api/messages', async (req, res) => {
-    const { name, email, role } = req.body;
+    // 🌟 FALLBACK WORKAROUND: Pulls either 'role' OR 'message' fields dynamically
+    const name = req.body.name;
+    const email = req.body.email;
+    const role = req.body.role || req.body.message; 
     
     if (!name || !email || !role) {
         return res.status(400).json({ error: 'Name, email, and message details are required.' });
