@@ -1,7 +1,31 @@
 document.addEventListener('DOMContentLoaded', () => {
     const internForm = document.getElementById('internForm');
 
-    // 📤 Form Submission Handler (Securely sends payloads to the backend)
+    // ✨ Helper Function to Trigger Glassmorphism Toast
+    const showGlassToast = (message, icon = '🚀') => {
+        // Create toast element container dynamically
+        const toast = document.createElement('div');
+        toast.className = 'glass-toast';
+        toast.innerHTML = `
+            <span class="toast-icon">${icon}</span>
+            <span class="toast-message">${message}</span>
+        `;
+        
+        document.body.appendChild(toast);
+
+        // Tiny delay to allow CSS transition engine to capture entry animation
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 50);
+
+        // Automatically slide out and destroy toast after 4 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 500); // Completely delete element from DOM tree
+        }, 4000);
+    };
+
+    // 📤 Form Submission Handler
     if (internForm) {
         internForm.addEventListener('submit', async (event) => {
             event.preventDefault(); 
@@ -10,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const emailInput = document.getElementById('internEmail') || document.getElementById('email');
             const messageInput = document.getElementById('internRole') || document.getElementById('message');
 
-            // 🌟 FIXED: Changed the property key from 'role' to 'message' to match database expectations
             const formData = {
                 name: nameInput.value.trim(),
                 email: emailInput.value.trim(),
@@ -20,24 +43,23 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const response = await fetch('/api/messages', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData)
                 });
 
                 if (response.ok) {
-                    alert('🚀 Message sent successfully! I will get back to you soon.');
+                    // 🌟 UPGRADED: Silky premium toast replaces standard browser layout
+                    showGlassToast('Message delivered successfully! I will reach out shortly.', '✨');
                     
                     // Reset inputs safely
                     if (nameInput) nameInput.value = '';
                     if (emailInput) emailInput.value = '';
                     if (messageInput) messageInput.value = '';
                 } else {
-                    console.error('❌ Server rejected the data packet transaction.');
+                    showGlassToast('Server rejected data packet transaction.', '❌');
                 }
             } catch (error) {
-                console.error('❌ Network link failure during form transmission:', error);
+                showGlassToast('Network link failure during transmission.', '📡');
             }
         });
     }
