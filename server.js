@@ -51,8 +51,8 @@ app.post('/api/messages', async (req, res) => {
     }
 });
 
-// 🏠 FALLBACK ROUTE: Delivers index.html for any root or unhandled pathing requests
-app.get('*', (req, res) => {
+// 🏠 FALLBACK ROUTE: Upgraded syntax to string regex match for Express v5 compatibility
+app.get('/:splat(.*)', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
