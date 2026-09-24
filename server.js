@@ -8,14 +8,13 @@ const PORT = process.env.PORT || 3000;
 
 const MONGO_URI = process.env.MONGO_URI;
 
-if (!MONGO_URI) {
-    console.error('❌ CRITICAL ERROR: MONGO_URI is missing from your environment configurations!');
-    process.exit(1);
+if (MONGO_URI) {
+    mongoose.connect(MONGO_URI)
+        .then(() => console.log('🚀 Successfully connected to MongoDB Atlas Cloud Database!'))
+        .catch(err => console.error('❌ Database Connection Failure:', err.message));
+} else {
+    console.warn('⚠️ Notice: MONGO_URI is not set in environment. Running with in-memory storage fallback.');
 }
-
-mongoose.connect(MONGO_URI)
-    .then(() => console.log('🚀 Successfully connected to MongoDB Atlas Cloud Database!'))
-    .catch(err => console.error('❌ Database Connection Failure:', err.message));
 
 // 📝 Schema Configuration Rule
 const messageSchema = new mongoose.Schema({
@@ -25,7 +24,8 @@ const messageSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
-const Message = mongoose.model('Message', messageSchema);
+const Message = mongoose.models.Message || mongoose.model('Message', messageSchema);
+const memoryMessages = [];
 
 // 🌐 Parse JSON Payloads
 app.use(express.json());
@@ -45,11 +45,18 @@ app.post('/api/messages', async (req, res) => {
     }
 
     try {
-        const newMessage = new Message({ name, email, role });
-        await newMessage.save();
-        res.status(201).json(newMessage);
+        if (MONGO_URI && mongoose.connection.readyState === 1) {
+            const newMessage = new Message({ name, email, role });
+            await newMessage.save();
+            return res.status(201).json(newMessage);
+        } else {
+            const record = { id: Date.now().toString(), name, email, role, createdAt: new Date() };
+            memoryMessages.push(record);
+            console.log('📥 Advisory RFP Recorded (In-Memory):', record);
+            return res.status(201).json(record);
+        }
     } catch (error) {
-        console.error('❌ Failed to write message record to MongoDB:', error);
+        console.error('❌ Failed to write message record:', error);
         res.status(500).json({ error: 'Failed to write message record.' });
     }
 });
